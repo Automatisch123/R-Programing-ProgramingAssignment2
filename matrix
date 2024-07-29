@@ -1,0 +1,53 @@
+
+# makeCacheMatrix() creates a special "matrix" object that
+# can cache its inverse.
+#
+# The <<- operator is used to assign a value to an object in an
+# environment that is different from the current environment.
+#
+# Computing the inverse of a square matrix can be done
+# using solve(). If 'my_matrix' is a square matrix, solve(x) will
+# return its inverse.
+#
+#################################################################
+#
+# makeCacheMatrix(x)
+#
+#################################################################
+makeCacheMatrix <- function(my_matrix=matrix()) {
+    m <- NULL
+    set <- function(y) {
+        my_matrix <<- y
+        m <<- NULL
+    }
+    get <- function() my_matrix
+    setsolve <- function(solve) m <<- solve
+    getsolve <- function() m
+    list(set = set, get = get,
+         setsolve = setsolve,
+         getsolve = getsolve)
+}
+
+
+# cacheSolve() calculates the inverse of the special "matrix"
+# returned by makeCacheMatrix(). If the inverse has already
+# been calculated, and the matrix has not changed, then
+# cachSolve() will retrieve the inverse from the cache.
+#
+#################################################################
+#
+#       cacheSolve(x, ...)
+#
+#################################################################
+#
+cacheSolve <- function(my_matrix, ...) {
+    m <- my_matrix$getsolve()
+    if(!is.null(m)) {
+        message("getting cached data")
+        return(m)
+    }
+    data <- my_matrix$get()
+    m <- solve(data, ...)
+    x$setsolve(my_matrix)
+}
+
